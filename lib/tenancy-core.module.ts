@@ -30,7 +30,7 @@ import { ConnectionMap, ModelDefinitionMap } from './types';
 @Global()
 @Module({})
 export class TenancyCoreModule implements OnApplicationShutdown {
-  constructor(private readonly moduleRef: ModuleRef) {}
+  constructor(private readonly moduleRef: ModuleRef) { }
 
   /**
    * Register for synchornous modules
@@ -355,11 +355,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     modelDefMap.forEach(async (definition: any) => {
       const { name, schema, collection } = definition;
 
-      const modelCreated: Model<unknown> = connection.model(
-        name,
-        schema,
-        collection,
-      );
+      const modelCreated = connection.model(name, schema, collection);
 
       if (moduleOptions.forceCreateCollections) {
         // For transactional support the Models/Collections has exist in the
