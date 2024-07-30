@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TENANT_MODULE_OPTIONS = exports.TENANT_CONNECTION = exports.CONNECTION_MAP = exports.MODEL_DEFINITION_MAP = exports.TENANT_CONTEXT = exports.DEFAULT_HTTP_ADAPTER_HOST = exports.DEFAULT_TENANT_DB_CONNECTION = void 0;
+exports.DEFAULT_TENANT_DB_CONNECTION = 'TenantConnection';
+exports.DEFAULT_HTTP_ADAPTER_HOST = 'DefaultHttpAdapterHost';
+exports.TENANT_CONTEXT = 'TenantContext';
+exports.MODEL_DEFINITION_MAP = 'ModelDefinitionMap';
+exports.CONNECTION_MAP = 'ConnectionMap';
+exports.TENANT_CONNECTION = 'TenantConnection';
+exports.TENANT_MODULE_OPTIONS = 'TenantModuleOptions';
