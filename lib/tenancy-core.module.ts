@@ -2,6 +2,7 @@ import {
   BadRequestException,
   DynamicModule,
   Global,
+  InternalServerErrorException,
   Module,
   OnApplicationShutdown,
   Provider,
@@ -339,7 +340,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
       return connection;
     }
 
-    // Otherwise create a new connection
+    // Otherwise create a new connection with retry logic
     const uri = await Promise.resolve(moduleOptions.uri(tenantId));
     // Connection options
     const connectionOptions: ConnectionOptions = {
@@ -348,8 +349,12 @@ export class TenancyCoreModule implements OnApplicationShutdown {
       ...moduleOptions.options(),
     };
 
-    // Create the connection
-    const connection = createConnection(uri, connectionOptions);
+    // Create the connection with retry logic
+    const connection = await this.createConnectionWithRetry(
+      uri,
+      connectionOptions,
+      tenantId,
+    );
 
     // Attach connection to the models passed in the map
     modelDefMap.forEach(async (definition: any) => {
@@ -368,6 +373,70 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     connMap.set(tenantId, connection);
 
     return connection;
+  }
+
+  /**
+   * Create a database connection with retry logic
+   *
+   * @private
+   * @static
+   * @param {string} uri
+   * @param {ConnectionOptions} connectionOptions
+   * @param {string} tenantId
+   * @param {number} maxRetries
+   * @returns {Promise<Connection>}
+   * @memberof TenancyCoreModule
+   */
+  private static async createConnectionWithRetry(
+    uri: string,
+    connectionOptions: ConnectionOptions,
+    tenantId: string,
+    maxRetries = 5,
+  ): Promise<Connection> {
+    let lastError: Error | undefined;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const connection = createConnection(uri, connectionOptions);
+        await connection.asPromise();
+
+        // Log successful connection after retries
+        if (attempt > 1) {
+          console.log(
+            `Successfully connected to tenant "${tenantId}" database on attempt ${attempt}`,
+          );
+        }
+
+        return connection;
+      } catch (error) {
+        lastError = error as Error;
+
+        console.error(
+          `Failed to connect to tenant "${tenantId}" database (attempt ${attempt}/${maxRetries}): ${(error as Error).message
+          }`,
+        );
+
+        // If this is the last attempt, throw the error
+        if (attempt === maxRetries) {
+          break;
+        }
+
+        // Calculate exponential backoff delay (1s, 2s, 4s, 8s)
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 10000);
+        console.warn(
+          `Retrying connection to tenant "${tenantId}" in ${delay}ms...`,
+        );
+
+        // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    // If we reach here, all retries failed
+    const message = lastError?.message || 'Unknown error';
+    throw new InternalServerErrorException(
+      `Failed to connect to tenant "${tenantId}" database after ${maxRetries} attempts. Last error: ${message}`,
+    );
   }
 
   /**
