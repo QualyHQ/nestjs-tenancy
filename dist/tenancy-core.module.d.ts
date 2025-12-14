@@ -1,9 +1,9 @@
 import { DynamicModule, OnApplicationShutdown } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { TenancyModuleAsyncOptions, TenancyModuleOptions } from './interfaces';
 export declare class TenancyCoreModule implements OnApplicationShutdown {
-    private readonly moduleRef;
-    constructor(moduleRef: ModuleRef);
+    private static pendingConnections;
+    private static connectionsWithHandlers;
+    private static baseConnectionMapInstance;
     static register(options: TenancyModuleOptions): DynamicModule;
     static registerAsync(options: TenancyModuleAsyncOptions): DynamicModule;
     onApplicationShutdown(): Promise<void>;
@@ -11,12 +11,19 @@ export declare class TenancyCoreModule implements OnApplicationShutdown {
     private static getTenantFromRequest;
     private static getTenantFromSubdomain;
     private static getConnection;
+    private static createBaseConnection;
+    private static setupConnectionHandlers;
+    private static clearTenantConnectionsForCluster;
+    private static createBaseConnectionMapProvider;
     private static createConnectionMapProvider;
     private static createModelDefinitionMapProvider;
     private static createTenantContextProvider;
     private static createAsyncProviders;
     private static createAsyncOptionsProvider;
     private static createHttpAdapterProvider;
+    private static buildBaseConnectionUri;
+    private static extractBaseUri;
+    private static extractDatabaseName;
     private static isEmpty;
     private static adapterIsFastify;
     private static getSubdomainsForFastify;
