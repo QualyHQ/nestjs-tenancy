@@ -148,6 +148,22 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
                 }
                 return connection;
             }
+            const pendingTenantConn = this.pendingTenantConnections.get(tenantId);
+            if (pendingTenantConn) {
+                return yield pendingTenantConn;
+            }
+            const tenantConnectionPromise = this.createTenantConnection(tenantId, moduleOptions, baseConnMap, connMap, modelDefMap);
+            this.pendingTenantConnections.set(tenantId, tenantConnectionPromise);
+            try {
+                return yield tenantConnectionPromise;
+            }
+            finally {
+                this.pendingTenantConnections.delete(tenantId);
+            }
+        });
+    }
+    static createTenantConnection(tenantId, moduleOptions, baseConnMap, connMap, modelDefMap) {
+        return __awaiter(this, void 0, void 0, function* () {
             const uri = yield Promise.resolve(moduleOptions.uri(tenantId));
             const baseUri = this.extractBaseUri(uri);
             const dbName = this.extractDatabaseName(uri, tenantId);
@@ -414,6 +430,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
     }
 };
 TenancyCoreModule.pendingConnections = new Map();
+TenancyCoreModule.pendingTenantConnections = new Map();
 TenancyCoreModule.connectionsWithHandlers = new Set();
 TenancyCoreModule.baseConnectionMapInstance = null;
 TenancyCoreModule = TenancyCoreModule_1 = __decorate([
