@@ -216,16 +216,14 @@ export class TenancyCoreModule implements OnApplicationShutdown {
   ) {
     let tenantId = '';
 
-    if (isFastifyAdaptor) {
-      // For Fastify
-      // Get the tenant id from the header
-      tenantId =
-        req.headers[`${tenantIdentifier || ''}`.toLowerCase()]?.toString() ||
-        '';
-    } else {
-      // For Express - Default
-      // Get the tenant id from the request
+    // Use req.get() for Express, fall back to req.headers for Fastify,
+    // non-HTTP contexts (PubSub, WebSocket, CRON), or custom adapters.
+    if (!isFastifyAdaptor && typeof req.get === 'function') {
       tenantId = req.get(`${tenantIdentifier}`) || '';
+    } else {
+      tenantId =
+        req.headers?.[`${tenantIdentifier || ''}`.toLowerCase()]?.toString() ||
+        '';
     }
 
     // Validate if tenant id is present

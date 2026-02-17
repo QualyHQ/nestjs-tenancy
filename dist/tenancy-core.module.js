@@ -96,15 +96,15 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         }
     }
     static getTenantFromRequest(isFastifyAdaptor, req, tenantIdentifier) {
-        var _a;
+        var _a, _b;
         let tenantId = '';
-        if (isFastifyAdaptor) {
-            tenantId =
-                ((_a = req.headers[`${tenantIdentifier || ''}`.toLowerCase()]) === null || _a === void 0 ? void 0 : _a.toString()) ||
-                    '';
+        if (!isFastifyAdaptor && typeof req.get === 'function') {
+            tenantId = req.get(`${tenantIdentifier}`) || '';
         }
         else {
-            tenantId = req.get(`${tenantIdentifier}`) || '';
+            tenantId =
+                ((_b = (_a = req.headers) === null || _a === void 0 ? void 0 : _a[`${tenantIdentifier || ''}`.toLowerCase()]) === null || _b === void 0 ? void 0 : _b.toString()) ||
+                    '';
         }
         if (this.isEmpty(tenantId)) {
             throw new common_1.BadRequestException(`${tenantIdentifier} is not supplied`);
