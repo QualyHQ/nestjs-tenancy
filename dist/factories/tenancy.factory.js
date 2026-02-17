@@ -22,11 +22,14 @@ const createTenancyProviders = (definitions) => {
         });
         providers.push({
             provide: (0, utils_1.getTenantModelToken)(name),
-            useFactory(tenantConnection) {
+            useFactory(_definition, tenantConnection) {
+                if (!tenantConnection) {
+                    return undefined;
+                }
                 return (tenantConnection.models[name] ||
                     tenantConnection.model(name, schema, collection));
             },
-            inject: [tenancy_constants_1.TENANT_CONNECTION],
+            inject: [(0, utils_1.getTenantModelDefinitionToken)(name), tenancy_constants_1.TENANT_CONNECTION],
         });
     }
     return providers;
