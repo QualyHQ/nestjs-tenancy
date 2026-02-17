@@ -137,12 +137,15 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
             const exists = connMap.has(tenantId);
             if (exists) {
                 const connection = connMap.get(tenantId);
-                modelDefMap.forEach((definition) => {
-                    const { name, schema, collection } = definition;
-                    if (!connection.models[name]) {
-                        connection.model(name, schema, collection);
-                    }
-                });
+                const registeredCount = Object.keys(connection.models).length;
+                if (registeredCount < modelDefMap.size) {
+                    modelDefMap.forEach((definition) => {
+                        const { name, schema, collection } = definition;
+                        if (!connection.models[name]) {
+                            connection.model(name, schema, collection);
+                        }
+                    });
+                }
                 if (moduleOptions.forceCreateCollections) {
                     yield Promise.all(Object.entries(connection.models).map(([, m]) => m.createCollection()));
                 }
