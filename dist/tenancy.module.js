@@ -9,8 +9,8 @@ var TenancyModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TenancyModule = void 0;
 const common_1 = require("@nestjs/common");
+const factories_1 = require("./factories");
 const tenancy_core_module_1 = require("./tenancy-core.module");
-const tenancy_feature_module_1 = require("./tenancy-feature.module");
 let TenancyModule = TenancyModule_1 = class TenancyModule {
     static forRoot(options) {
         return {
@@ -25,9 +25,11 @@ let TenancyModule = TenancyModule_1 = class TenancyModule {
         };
     }
     static forFeature(models) {
+        const providers = (0, factories_1.createTenancyProviders)(models);
         return {
             module: TenancyModule_1,
-            imports: [tenancy_feature_module_1.TenancyFeatureModule.register(models)],
+            providers,
+            exports: providers,
         };
     }
 };
