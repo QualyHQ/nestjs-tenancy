@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createTenancyProviders = void 0;
+const common_1 = require("@nestjs/common");
 const tenancy_constants_1 = require("../tenancy.constants");
 const utils_1 = require("../utils");
 const createTenancyProviders = (definitions) => {
@@ -22,6 +23,7 @@ const createTenancyProviders = (definitions) => {
         });
         providers.push({
             provide: (0, utils_1.getTenantModelToken)(name),
+            scope: common_1.Scope.REQUEST,
             useFactory(_definition, tenantConnection) {
                 if (!tenantConnection) {
                     throw new Error(`[TenancyModule] Tenant connection is null for model "${name}". ` +
