@@ -32,19 +32,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         const tenantContextProvider = this.createTenantContextProvider();
         const httpAdapterHost = this.createHttpAdapterProvider();
         const baseConnectionMapProvider = this.createBaseConnectionMapProvider();
-        const tenantConnectionProvider = {
-            provide: tenancy_constants_1.TENANT_CONNECTION,
-            useFactory: (tenantId, moduleOptions, baseConnMap, connMap, modelDefMap) => __awaiter(this, void 0, void 0, function* () {
-                return yield this.getConnection(tenantId, moduleOptions, baseConnMap, connMap, modelDefMap);
-            }),
-            inject: [
-                tenancy_constants_1.TENANT_CONTEXT,
-                tenancy_constants_1.TENANT_MODULE_OPTIONS,
-                tenancy_constants_1.BASE_CONNECTION_MAP,
-                tenancy_constants_1.CONNECTION_MAP,
-                tenancy_constants_1.MODEL_DEFINITION_MAP,
-            ],
-        };
+        const tenantConnectionProvider = this.createTenantConnectionProvider();
         const providers = [
             tenancyModuleOptionsProvider,
             tenantContextProvider,
@@ -66,19 +54,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         const tenantContextProvider = this.createTenantContextProvider();
         const httpAdapterHost = this.createHttpAdapterProvider();
         const baseConnectionMapProvider = this.createBaseConnectionMapProvider();
-        const tenantConnectionProvider = {
-            provide: tenancy_constants_1.TENANT_CONNECTION,
-            useFactory: (tenantId, moduleOptions, baseConnMap, connMap, modelDefMap) => __awaiter(this, void 0, void 0, function* () {
-                return yield this.getConnection(tenantId, moduleOptions, baseConnMap, connMap, modelDefMap);
-            }),
-            inject: [
-                tenancy_constants_1.TENANT_CONTEXT,
-                tenancy_constants_1.TENANT_MODULE_OPTIONS,
-                tenancy_constants_1.BASE_CONNECTION_MAP,
-                tenancy_constants_1.CONNECTION_MAP,
-                tenancy_constants_1.MODEL_DEFINITION_MAP,
-            ],
-        };
+        const tenantConnectionProvider = this.createTenantConnectionProvider();
         const asyncProviders = this.createAsyncProviders(options);
         const providers = [
             ...asyncProviders,
@@ -320,6 +296,22 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         return {
             provide: tenancy_constants_1.MODEL_DEFINITION_MAP,
             useFactory: () => new Map(),
+        };
+    }
+    static createTenantConnectionProvider() {
+        return {
+            provide: tenancy_constants_1.TENANT_CONNECTION,
+            scope: common_1.Scope.REQUEST,
+            useFactory: (tenantId, moduleOptions, baseConnMap, connMap, modelDefMap) => __awaiter(this, void 0, void 0, function* () {
+                return yield this.getConnection(tenantId, moduleOptions, baseConnMap, connMap, modelDefMap);
+            }),
+            inject: [
+                tenancy_constants_1.TENANT_CONTEXT,
+                tenancy_constants_1.TENANT_MODULE_OPTIONS,
+                tenancy_constants_1.BASE_CONNECTION_MAP,
+                tenancy_constants_1.CONNECTION_MAP,
+                tenancy_constants_1.MODEL_DEFINITION_MAP,
+            ],
         };
     }
     static createTenantContextProvider() {
