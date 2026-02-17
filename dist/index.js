@@ -21,3 +21,4 @@ __exportStar(require("./decorators"), exports);
 __exportStar(require("./utils"), exports);
 __exportStar(require("./factories"), exports);
 __exportStar(require("./tenancy.module"), exports);
+__exportStar(require("./tenancy.service"), exports);

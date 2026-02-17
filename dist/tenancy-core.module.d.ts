@@ -2,6 +2,7 @@ import { DynamicModule, OnApplicationShutdown } from '@nestjs/common';
 import { TenancyModuleAsyncOptions, TenancyModuleOptions } from './interfaces';
 export declare class TenancyCoreModule implements OnApplicationShutdown {
     private static pendingConnections;
+    private static pendingTenantConnections;
     private static connectionsWithHandlers;
     private static baseConnectionMapInstance;
     static register(options: TenancyModuleOptions): DynamicModule;
@@ -11,12 +12,14 @@ export declare class TenancyCoreModule implements OnApplicationShutdown {
     private static getTenantFromRequest;
     private static getTenantFromSubdomain;
     private static getConnection;
+    private static createTenantConnection;
     private static createBaseConnection;
     private static setupConnectionHandlers;
     private static clearTenantConnectionsForCluster;
     private static createBaseConnectionMapProvider;
     private static createConnectionMapProvider;
     private static createModelDefinitionMapProvider;
+    private static createTenantConnectionProvider;
     private static createTenantContextProvider;
     private static createAsyncProviders;
     private static createAsyncOptionsProvider;

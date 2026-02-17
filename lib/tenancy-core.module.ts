@@ -17,6 +17,7 @@ import {
   TenancyModuleOptions,
   TenancyOptionsFactory,
 } from './interfaces';
+import { TenancyService } from './tenancy.service';
 import {
   BASE_CONNECTION_MAP,
   CONNECTION_MAP,
@@ -84,6 +85,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
       baseConnectionMapProvider,
       tenantConnectionProvider,
       httpAdapterHost,
+      TenancyService,
     ];
 
     return {
@@ -132,6 +134,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
       baseConnectionMapProvider,
       tenantConnectionProvider,
       httpAdapterHost,
+      TenancyService,
     ];
 
     return {
@@ -946,7 +949,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
    * @memberof TenancyCoreModule
    */
   private static adapterIsFastify(adapterHost: HttpAdapterHost): boolean {
-    return adapterHost.httpAdapter.getType() === 'fastify';
+    return adapterHost?.httpAdapter?.getType() === 'fastify';
   }
 
   /**

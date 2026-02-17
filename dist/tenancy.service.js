@@ -1,0 +1,66 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TenancyService = void 0;
+const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
+const tenancy_constants_1 = require("./tenancy.constants");
+let TenancyService = class TenancyService {
+    constructor(moduleRef, options) {
+        this.moduleRef = moduleRef;
+        this.options = options;
+    }
+    run(tenantId, serviceTypeOrFn, fn) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const contextId = core_1.ContextIdFactory.create();
+            const request = this.buildRequest(tenantId);
+            this.moduleRef.registerRequestByContextId(request, contextId);
+            const resolver = (type) => this.moduleRef.resolve(type, contextId, { strict: false });
+            if (fn) {
+                const service = yield resolver(serviceTypeOrFn);
+                return fn(service);
+            }
+            else {
+                return serviceTypeOrFn(resolver);
+            }
+        });
+    }
+    buildRequest(tenantId) {
+        if (this.options.isTenantFromSubdomain) {
+            return {
+                headers: { host: `${tenantId}.tenancy.local` },
+                subdomains: [tenantId],
+            };
+        }
+        const identifier = (this.options.tenantIdentifier || '').toLowerCase();
+        return {
+            headers: { [identifier]: tenantId },
+        };
+    }
+};
+TenancyService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(1, (0, common_1.Inject)(tenancy_constants_1.TENANT_MODULE_OPTIONS)),
+    __metadata("design:paramtypes", [core_1.ModuleRef, Object])
+], TenancyService);
+exports.TenancyService = TenancyService;

@@ -20,6 +20,7 @@ exports.TenancyCoreModule = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const mongoose_1 = require("mongoose");
+const tenancy_service_1 = require("./tenancy.service");
 const tenancy_constants_1 = require("./tenancy.constants");
 let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
     static register(options) {
@@ -41,6 +42,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
             baseConnectionMapProvider,
             tenantConnectionProvider,
             httpAdapterHost,
+            tenancy_service_1.TenancyService,
         ];
         return {
             module: TenancyCoreModule_1,
@@ -64,6 +66,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
             baseConnectionMapProvider,
             tenantConnectionProvider,
             httpAdapterHost,
+            tenancy_service_1.TenancyService,
         ];
         return {
             module: TenancyCoreModule_1,
@@ -422,7 +425,8 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         return !obj || !Object.keys(obj).some((x) => obj[x] !== void 0);
     }
     static adapterIsFastify(adapterHost) {
-        return adapterHost.httpAdapter.getType() === 'fastify';
+        var _a;
+        return ((_a = adapterHost === null || adapterHost === void 0 ? void 0 : adapterHost.httpAdapter) === null || _a === void 0 ? void 0 : _a.getType()) === 'fastify';
     }
     static getSubdomainsForFastify(req) {
         var _a;
