@@ -33,7 +33,7 @@ let TenancyModule = TenancyModule_1 = class TenancyModule {
         };
     }
 };
-TenancyModule = TenancyModule_1 = __decorate([
+exports.TenancyModule = TenancyModule;
+exports.TenancyModule = TenancyModule = TenancyModule_1 = __decorate([
     (0, common_1.Module)({})
 ], TenancyModule);
-exports.TenancyModule = TenancyModule;

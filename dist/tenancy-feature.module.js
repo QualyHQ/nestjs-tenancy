@@ -20,7 +20,7 @@ let TenancyFeatureModule = TenancyFeatureModule_1 = class TenancyFeatureModule {
         };
     }
 };
-TenancyFeatureModule = TenancyFeatureModule_1 = __decorate([
+exports.TenancyFeatureModule = TenancyFeatureModule;
+exports.TenancyFeatureModule = TenancyFeatureModule = TenancyFeatureModule_1 = __decorate([
     (0, common_1.Module)({})
 ], TenancyFeatureModule);
-exports.TenancyFeatureModule = TenancyFeatureModule;

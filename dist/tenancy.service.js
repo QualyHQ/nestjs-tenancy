@@ -58,9 +58,9 @@ let TenancyService = class TenancyService {
         };
     }
 };
-TenancyService = __decorate([
+exports.TenancyService = TenancyService;
+exports.TenancyService = TenancyService = __decorate([
     (0, common_1.Injectable)(),
     __param(1, (0, common_1.Inject)(tenancy_constants_1.TENANT_MODULE_OPTIONS)),
     __metadata("design:paramtypes", [core_1.ModuleRef, Object])
 ], TenancyService);
-exports.TenancyService = TenancyService;

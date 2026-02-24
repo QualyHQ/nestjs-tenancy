@@ -10,8 +10,7 @@ import {
 import { Type } from '@nestjs/common/interfaces';
 import { HttpAdapterHost, REQUEST } from '@nestjs/core';
 import { Request } from 'express';
-import { Connection, createConnection, Model } from 'mongoose';
-import { ConnectionOptions } from 'tls';
+import { Connection, ConnectOptions, createConnection } from 'mongoose';
 import {
   TenancyModuleAsyncOptions,
   TenancyModuleOptions,
@@ -74,8 +73,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     const baseConnectionMapProvider = this.createBaseConnectionMapProvider();
 
     /* Tenant Connection */
-    const tenantConnectionProvider =
-      this.createTenantConnectionProvider();
+    const tenantConnectionProvider = this.createTenantConnectionProvider();
 
     const providers = [
       tenancyModuleOptionsProvider,
@@ -120,8 +118,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     const baseConnectionMapProvider = this.createBaseConnectionMapProvider();
 
     /* Tenant Connection */
-    const tenantConnectionProvider =
-      this.createTenantConnectionProvider();
+    const tenantConnectionProvider = this.createTenantConnectionProvider();
 
     /* Asyc providers */
     const asyncProviders = this.createAsyncProviders(options);
@@ -486,9 +483,7 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     }
 
     // Create a new base connection for this cluster
-    const connectionOptions: ConnectionOptions = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    const connectionOptions: ConnectOptions = {
       ...moduleOptions.options(),
     };
 

@@ -224,7 +224,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
                 this.clearTenantConnectionsForCluster(connMap, baseUri);
                 this.connectionsWithHandlers.delete(baseUri);
             }
-            const connectionOptions = Object.assign({ useNewUrlParser: true, useUnifiedTopology: true }, moduleOptions.options());
+            const connectionOptions = Object.assign({}, moduleOptions.options());
             const baseConnectionUri = this.buildBaseConnectionUri(uri, baseUri);
             const baseConnection = (0, mongoose_1.createConnection)(baseConnectionUri, connectionOptions);
             baseConnMap.set(baseUri, baseConnection);
@@ -436,12 +436,12 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
         return host.split('.').reverse();
     }
 };
+exports.TenancyCoreModule = TenancyCoreModule;
 TenancyCoreModule.pendingConnections = new Map();
 TenancyCoreModule.pendingTenantConnections = new Map();
 TenancyCoreModule.connectionsWithHandlers = new Set();
 TenancyCoreModule.baseConnectionMapInstance = null;
-TenancyCoreModule = TenancyCoreModule_1 = __decorate([
+exports.TenancyCoreModule = TenancyCoreModule = TenancyCoreModule_1 = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({})
 ], TenancyCoreModule);
-exports.TenancyCoreModule = TenancyCoreModule;
