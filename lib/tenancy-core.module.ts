@@ -185,6 +185,19 @@ export class TenancyCoreModule implements OnApplicationShutdown {
     const { tenantIdentifier = null, isTenantFromSubdomain = false } =
       moduleOptions;
 
+    if (!req) {
+      const adapterType = isFastifyAdaptor ? 'Fastify' : 'Express';
+      const identifier = tenantIdentifier || 'N/A';
+      throw new BadRequestException(
+        `[nestjs-tenancy] Request context is undefined. ` +
+          `TENANT_CONTEXT provider requires an active HTTP request scope. ` +
+          `This typically happens when resolving TENANT_CONTEXT outside an HTTP lifecycle ` +
+          `(e.g. CRON jobs, event handlers, microservice handlers, WebSocket gateways). ` +
+          `Adapter: ${adapterType}, tenantIdentifier: "${identifier}", ` +
+          `isTenantFromSubdomain: ${isTenantFromSubdomain}`,
+      );
+    }
+
     // Pull the tenant id from the subdomain
     if (isTenantFromSubdomain) {
       return this.getTenantFromSubdomain(isFastifyAdaptor, req);
