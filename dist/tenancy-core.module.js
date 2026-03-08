@@ -257,28 +257,28 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
     static setupConnectionHandlers(connection, baseUri, connMap, baseConnMap) {
         connection.on('disconnected', () => {
             try {
-                console.warn(`[TenancyModule] Base connection disconnected for cluster: ${baseUri}`);
+                console.warn(`[TenancyModule] Base connection disconnected for cluster: ${this.sanitizeUri(baseUri)}`);
                 this.clearTenantConnectionsForCluster(connMap, baseUri);
                 this.connectionsWithHandlers.delete(baseUri);
             }
             catch (error) {
-                console.error(`[TenancyModule] Error handling disconnection for cluster: ${baseUri}`, error);
+                console.error(`[TenancyModule] Error handling disconnection for cluster: ${this.sanitizeUri(baseUri)}`, error);
             }
         });
         connection.on('reconnected', () => {
-            console.log(`[TenancyModule] Base connection reconnected for cluster: ${baseUri}`);
+            console.log(`[TenancyModule] Base connection reconnected for cluster: ${this.sanitizeUri(baseUri)}`);
         });
         connection.on('error', (error) => {
-            console.error(`[TenancyModule] Base connection error for cluster: ${baseUri}`, error.message);
+            console.error(`[TenancyModule] Base connection error for cluster: ${this.sanitizeUri(baseUri)}`, error.message);
         });
         connection.on('close', () => {
             try {
-                console.warn(`[TenancyModule] Base connection closed for cluster: ${baseUri}`);
+                console.warn(`[TenancyModule] Base connection closed for cluster: ${this.sanitizeUri(baseUri)}`);
                 baseConnMap.delete(baseUri);
                 this.connectionsWithHandlers.delete(baseUri);
             }
             catch (error) {
-                console.error(`[TenancyModule] Error handling close for cluster: ${baseUri}`, error);
+                console.error(`[TenancyModule] Error handling close for cluster: ${this.sanitizeUri(baseUri)}`, error);
             }
         });
     }
@@ -305,7 +305,7 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
             }
         }
         catch (error) {
-            console.error(`[TenancyModule] Error clearing tenant connections for cluster: ${baseUri}`, error);
+            console.error(`[TenancyModule] Error clearing tenant connections for cluster: ${this.sanitizeUri(baseUri)}`, error);
         }
     }
     static createBaseConnectionMapProvider() {
@@ -390,6 +390,14 @@ let TenancyCoreModule = TenancyCoreModule_1 = class TenancyCoreModule {
             useFactory: (adapterHost) => adapterHost,
             inject: [core_1.HttpAdapterHost],
         };
+    }
+    static sanitizeUri(uri) {
+        try {
+            return uri.replace(/:\/\/([^@]+)@/, '://***@');
+        }
+        catch (_a) {
+            return '***';
+        }
     }
     static buildBaseConnectionUri(fullUri, baseUri) {
         try {

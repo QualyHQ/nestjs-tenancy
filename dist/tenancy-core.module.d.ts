@@ -24,6 +24,7 @@ export declare class TenancyCoreModule implements OnApplicationShutdown {
     private static createAsyncProviders;
     private static createAsyncOptionsProvider;
     private static createHttpAdapterProvider;
+    private static sanitizeUri;
     private static buildBaseConnectionUri;
     private static extractBaseUri;
     private static extractDatabaseName;
